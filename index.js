@@ -1,101 +1,58 @@
-
 const express = require('express');
-const bodyParser = require('body-parser');
-const multer = require('multer');
-const streamifier = require('streamifier');
-const { Pool } = require('pg');
-const cloudinary = require('cloudinary').v2;
-
+const path = require('path');
+const fs = require('fs');
 const app = express();
-const port = process.env.PORT || 3000;
-const upload = multer();
+const PORT = process.env.PORT || 3000;
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname));
+
+// Serve homepage
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+// Serve post page
+app.get('/post', (req, res) => {
+  res.sendFile(path.join(__dirname, 'post.html'));
 });
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+// Handle form submissions
+app.post('/submit', (req, res) => {
+  const newListing = {
+    title: req.body.title,
+    price: req.body.price,
+    description: req.body.description
+  };
 
-app.get('/', async (req, res) => {
-  const result = await pool.query('SELECT * FROM listings ORDER BY id DESC');
-  const listings = result.rows;
+  // Read existing listings
+  const dataPath = path.join(__dirname, 'listings.json');
+  let listings = [];
 
-  let html = `
-    <h1>Houses for Sale</h1>
-    <a href="/add">Post a New Listing</a>
-    <ul>
-      ${listings.map(listing => `
-        <li>
-          <h2>${listing.title}</h2>
-          <p>Price: $${listing.price}</p>
-          <p>${listing.description}</p>
-          ${listing.image_url ? `<img src="${listing.image_url}" width="300">` : ''}
-        </li>
-      `).join('')}
-    </ul>
-  `;
-  res.send(html);
+  if (fs.existsSync(dataPath)) {
+    const data = fs.readFileSync(dataPath);
+    listings = JSON.parse(data);
+  }
+
+  listings.push(newListing);
+
+  // Save updated listings
+  fs.writeFileSync(dataPath, JSON.stringify(listings, null, 2));
+
+  res.redirect('/');
 });
 
-app.get('/add', (req, res) => {
-  res.send(`
-    <h1>Post a House for Sale</h1>
-    <form method="POST" action="/add" enctype="multipart/form-data">
-      <label>Title: <input name="title" required></label><br>
-      <label>Price: <input name="price" type="number" required></label><br>
-      <label>Description:<br><textarea name="description" required></textarea></label><br>
-      <label>Image: <input type="file" name="image" accept="image/*" required></label><br>
-      <button type="submit">Post Listing</button>
-    </form>
-  `);
-});
-
-app.post('/add', upload.single('image'), async (req, res) => {
-  const { title, price, description } = req.body;
-  let imageUrl = null;
-
-  if (req.file) {
-    const stream = cloudinary.uploader.upload_stream((error, result) => {
-      if (error) {
-        console.error('Cloudinary Error:', error);
-        res.status(500).send('Image upload failed');
-      } else {
-        imageUrl = result.secure_url;
-        saveListing();
-      }
-    });
-
-    streamifier.createReadStream(req.file.buffer).pipe(stream);
+// API endpoint to get listings (optional, used for dynamic frontend)
+app.get('/api/listings', (req, res) => {
+  const dataPath = path.join(__dirname, 'listings.json');
+  if (fs.existsSync(dataPath)) {
+    const data = fs.readFileSync(dataPath);
+    res.json(JSON.parse(data));
   } else {
-    saveListing();
-  }
-
-  async function saveListing() {
-    await pool.query(
-      'INSERT INTO listings (title, price, description, image_url) VALUES ($1, $2, $3, $4)',
-      [title, price, description, imageUrl]
-    );
-    res.redirect('/');
+    res.json([]);
   }
 });
 
-app.listen(port, async () => {
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS listings (
-      id SERIAL PRIMARY KEY,
-      title TEXT,
-      price NUMERIC,
-      description TEXT,
-      image_url TEXT
-    )
-  `);
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
