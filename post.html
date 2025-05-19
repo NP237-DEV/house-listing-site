@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Post a House</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      padding: 1rem;
+    }
+    form {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    input, textarea {
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+  <h2>Post a New House Listing</h2>
+  <form action="/houses" method="POST" enctype="multipart/form-data">
+    <input type="text" name="title" placeholder="House Title" required />
+    <input type="text" name="price" placeholder="Price (e.g. $100,000)" required />
+    <textarea name="description" placeholder="Description" rows="5" required></textarea>
+    <input type="file" name="image" accept="image/*" />
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
