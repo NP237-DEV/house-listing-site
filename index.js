@@ -1,14 +1,22 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const { Pool } = require('pg');
+
 const app = express();
 const port = process.env.PORT || 3000;
 
-let listings = [];
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+  const result = await pool.query('SELECT * FROM listings ORDER BY id DESC');
+  const listings = result.rows;
+
   let html = `
     <h1>Houses for Sale</h1>
     <a href="/add">Post a New Listing</a>
@@ -37,12 +45,23 @@ app.get('/add', (req, res) => {
   `);
 });
 
-app.post('/add', (req, res) => {
+app.post('/add', async (req, res) => {
   const { title, price, description } = req.body;
-  listings.push({ title, price, description });
+  await pool.query(
+    'INSERT INTO listings (title, price, description) VALUES ($1, $2, $3)',
+    [title, price, description]
+  );
   res.redirect('/');
 });
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+app.listen(port, async () => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS listings (
+      id SERIAL PRIMARY KEY,
+      title TEXT,
+      price NUMERIC,
+      description TEXT
+    )
+  `);
+  console.log(`Server running at http://localhost:${port}`);
 });
