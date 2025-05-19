@@ -7,12 +7,12 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
       margin: 0;
-      padding: 0;
+      background: #f4f4f4;
+      color: #333;
     }
     header {
-      background: #222;
+      background: #333;
       color: white;
       padding: 1rem;
       text-align: center;
@@ -21,65 +21,62 @@
       background: #444;
       display: flex;
       justify-content: center;
-      gap: 1rem;
-      padding: 0.5rem;
     }
     nav a {
       color: white;
+      padding: 1rem;
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      background: #333;
-      border-radius: 4px;
     }
     nav a:hover {
-      background: #666;
+      background: #222;
     }
     .container {
-      max-width: 800px;
-      margin: auto;
-      padding: 1rem;
+      padding: 1.5rem;
     }
     .card {
       background: white;
-      border-radius: 8px;
       padding: 1rem;
       margin-bottom: 1rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     h2 {
       margin-top: 0;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background: #222;
-      color: white;
-      margin-top: 2rem;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Houses for Sale</h1>
+    <h1>House Listings</h1>
   </header>
+
   <nav>
-    <a href="/">Home</a>
-    <a href="/post">Post Listing</a>
-    <a href="/about">About</a>
+    <a href="#">Home</a>
+    <a href="#post">Post Listing</a>
   </nav>
 
   <div class="container">
-    <!-- Listings -->
-    <div class="card">
-      <h2>Boom</h2>
-      <p><strong>Price:</strong> $102</p>
-      <p>Very cheap</p>
-    </div>
-    <!-- Add more listings dynamically -->
-  </div>
+    <section>
+      <h2>Available Houses</h2>
 
-  <footer>
-    &copy; 2025 House Listings
-  </footer>
+      <div class="card">
+        <h3>3 Bedroom House in Boom Town</h3>
+        <p><strong>Price:</strong> $102</p>
+        <p><strong>Description:</strong> Very cheap</p>
+      </div>
+
+      <!-- Add more listings here -->
+    </section>
+
+    <section id="post">
+      <h2>Post a New Listing</h2>
+      <form>
+        <input type="text" placeholder="Title" required/><br/><br/>
+        <input type="text" placeholder="Price" required/><br/><br/>
+        <textarea placeholder="Description" rows="4" required></textarea><br/><br/>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+  </div>
 </body>
 </html>
