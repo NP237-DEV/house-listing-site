@@ -11,6 +11,19 @@
     <h1>House Listings</h1>
   </header>
 
+  <!-- Filter/Search Form -->
+  <form class="filter-form" method="GET" action="/">
+    <input type="text" name="search" placeholder="Search by name or location" value="<%= search || '' %>">
+    
+    <select name="sort">
+      <option value="">Sort by</option>
+      <option value="low" <%= sort === 'low' ? 'selected' : '' %>>Price: Low to High</option>
+      <option value="high" <%= sort === 'high' ? 'selected' : '' %>>Price: High to Low</option>
+    </select>
+
+    <button type="submit">Apply</button>
+  </form>
+
   <!-- Listings -->
   <div class="listing-container">
     <% houses.forEach(house => { %>
