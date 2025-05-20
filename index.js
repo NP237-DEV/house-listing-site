@@ -2,97 +2,57 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const { Pool } = require('pg');
-const fs = require('fs');
-
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Set up PostgreSQL
+// PostgreSQL connection setup
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 });
 
-// Upload image setup
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const dir = './uploads';
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
-    cb(null, dir);
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
+// Auto-create "houses" table
+(async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS houses (
+        id SERIAL PRIMARY KEY,
+        title TEXT NOT NULL,
+        price NUMERIC NOT NULL,
+        description TEXT NOT NULL,
+        imageurl TEXT
+      );
+    `);
+    console.log("✅ Table 'houses' is ready.");
+  } catch (err) {
+    console.error("❌ Error creating table:", err);
   }
+})();
+
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Multer setup
+const storage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: (req, file, cb) => {
+    const uniqueName = `${Date.now()}-${file.originalname}`;
+    cb(null, uniqueName);
+  },
 });
 const upload = multer({ storage });
 
-// Homepage - show listings
-app.get('/', async (req, res) => {
-  try {
-    const results = await pool.query('SELECT * FROM houses ORDER BY id DESC');
-
-    res.send(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>House Listings</title>
-        <link rel="stylesheet" href="/style.css">
-      </head>
-      <body>
-        <h1>Houses for Sale</h1>
-        <a href="/add">Post a New Listing</a>
-        <ul>
-          ${results.rows.map(row => `
-            <li>
-              <h2>${row.title}</h2>
-              <p><strong>Price:</strong> $${row.price}</p>
-              <p>${row.description}</p>
-              <img src="${row.imageurl}" alt="${row.title}" width="300">
-            </li>
-          `).join('')}
-        </ul>
-      </body>
-      </html>
-    `);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error loading listings.");
-  }
-});
-
-// Show form
+// Serve the listing form
 app.get('/add', (req, res) => {
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>Add Listing</title>
-      <link rel="stylesheet" href="/style.css">
-    </head>
-    <body>
-      <h2>Post a House for Sale</h2>
-      <form action="/add" method="post" enctype="multipart/form-data">
-        <input type="text" name="title" placeholder="Title" required><br>
-        <input type="number" name="price" placeholder="Price" required><br>
-        <textarea name="description" placeholder="Description" required></textarea><br>
-        <input type="file" name="image" accept="image/*" required><br>
-        <button type="submit">Post Listing</button>
-      </form>
-    </body>
-    </html>
-  `);
+  res.sendFile(path.join(__dirname, 'public', 'form.html'));
 });
 
-// Handle form
+// Handle form submission
 app.post('/add', upload.single('image'), async (req, res) => {
   const { title, price, description } = req.body;
-  const imageurl = req.file ? '/uploads/' + req.file.filename : '';
+  const imageurl = req.file ? `/uploads/${req.file.filename}` : null;
 
   try {
     await pool.query(
@@ -100,9 +60,37 @@ app.post('/add', upload.single('image'), async (req, res) => {
       [title, price, description, imageurl]
     );
     res.redirect('/');
+  } catch (error) {
+    console.error('Error saving to DB:', error);
+    res.status(500).send('Something went wrong.');
+  }
+});
+
+// Show all listings
+app.get('/', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM houses ORDER BY id DESC');
+    let html = `
+      <html>
+      <head><title>House Listings</title></head>
+      <body style="font-family:sans-serif;padding:20px;">
+        <h1>House Listings</h1>
+        <a href="/add">+ Add New Listing</a>
+        <hr>`;
+    result.rows.forEach((row) => {
+      html += `
+        <div style="margin-bottom:30px;">
+          <h2>${row.title}</h2>
+          <p><strong>Price:</strong> $${row.price}</p>
+          <p>${row.description}</p>
+          ${row.imageurl ? `<img src="${row.imageurl}" style="max-width:300px;">` : ''}
+        </div>`;
+    });
+    html += `</body></html>`;
+    res.send(html);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error saving listing.');
+    res.status(500).send('Error fetching listings');
   }
 });
 
