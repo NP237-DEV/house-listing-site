@@ -5,26 +5,29 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>Add a New House</h1>
-  <a href="/">← Back to Listings</a>
 
-  <form action="/add" method="POST" enctype="multipart/form-data" class="add-form">
+  <header class="sticky-header">
+    <h1>Add a New House Listing</h1>
+  </header>
+
+  <form class="add-form" action="/add" method="POST" enctype="multipart/form-data">
     <label for="name">House Name:</label>
-    <input type="text" name="name" id="name" required>
+    <input type="text" id="name" name="name" required>
 
     <label for="price">Price ($):</label>
-    <input type="number" name="price" id="price" required>
-
-    <label for="description">Description:</label>
-    <textarea name="description" id="description" required></textarea>
+    <input type="number" id="price" name="price" required>
 
     <label for="location">Location:</label>
-    <input type="text" name="location" id="location" required>
+    <input type="text" id="location" name="location" required>
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" rows="4" required></textarea>
 
     <label for="image">Upload Image:</label>
-    <input type="file" name="image" id="image" accept="image/*">
+    <input type="file" id="image" name="image" accept="image/*">
 
-    <button type="submit">Submit</button>
+    <button type="submit">Post Listing</button>
   </form>
+
 </body>
 </html>
