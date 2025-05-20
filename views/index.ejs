@@ -25,6 +25,30 @@
   </form>
 
   <!-- Listings -->
+<form action="/" method="GET" class="filter-form">
+  <select name="type">
+    <option value="">All Types</option>
+    <option value="bungalow">Bungalow</option>
+    <option value="flat">Flat</option>
+    <option value="villa">Villa</option>
+    <option value="duplex">Duplex</option>
+  </select>
+
+  <select name="location">
+    <option value="">All Locations</option>
+    <option value="bomaka">Bomaka</option>
+    <option value="malingo">Malingo</option>
+    <option value="bonduma">Bonduma</option>
+  </select>
+
+  <select name="sort">
+    <option value="">Sort by</option>
+    <option value="asc">Price: Low to High</option>
+    <option value="desc">Price: High to Low</option>
+  </select>
+
+  <button type="submit">Apply</button>
+</form>
   <div class="listing-container">
     <% houses.forEach(house => { %>
       <div class="house-card">
