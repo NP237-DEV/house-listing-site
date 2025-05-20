@@ -46,6 +46,7 @@ app.get('/', async (req, res) => {
 
 app.get('/add', (req, res) => {
   res.send(`
+    <link rel="stylesheet" href="/style.css">
     <h1>Post a House for Sale</h1>
     <form method="POST" action="/add" enctype="multipart/form-data">
       <label>Title: <input name="title" required></label><br>
