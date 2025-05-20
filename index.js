@@ -41,6 +41,34 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ROUTES
+app.get('/', (req, res) => {
+  const { type, location, sort } = req.query;
+  let sql = 'SELECT * FROM houses WHERE 1=1';
+  let params = [];
+
+  if (type) {
+    sql += ' AND type = ?';
+    params.push(type);
+  }
+
+  if (location) {
+    sql += ' AND location = ?';
+    params.push(location);
+  }
+
+  if (sort === 'asc') {
+    sql += ' ORDER BY price ASC';
+  } else if (sort === 'desc') {
+    sql += ' ORDER BY price DESC';
+  }
+
+  db.all(sql, params, (err, rows) => {
+    if (err) {
+      return res.send('Error fetching houses');
+    }
+    res.render('index', { houses: rows });
+  });
+});
 // Route to show house details
 app.get('/house/:id', (req, res) => {
   const id = req.params.id;
