@@ -1,62 +1,67 @@
 body {
-  font-family: Arial, sans-serif;
-  max-width: 800px;
-  margin: auto;
+  background-color: #121212;
+  color: #f1f1f1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
-  background-color: #f4f4f4;
-  color: #333;
+  margin: 0;
 }
 
-h1, h2 {
-  color: #2c3e50;
+h1 {
+  color: #fff;
+  margin-bottom: 10px;
 }
 
 a {
+  color: #bb86fc;
+  text-decoration: none;
   display: inline-block;
   margin-bottom: 20px;
-  text-decoration: none;
-  color: #2980b9;
 }
 
-form {
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+a:hover {
+  text-decoration: underline;
 }
 
-input, textarea, button {
-  width: 100%;
-  padding: 8px;
-  margin-top: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.listing-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
 }
 
-button {
-  background-color: #2980b9;
-  color: white;
-  border: none;
-  cursor: pointer;
+.house-card {
+  background-color: #1e1e1e;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
+.house-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 16px rgba(187, 134, 252, 0.4);
 }
 
-li {
-  background: white;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-}
-
-img {
+.house-card img {
   max-width: 100%;
-  height: auto;
-  margin-top: 10px;
-  border-radius: 5px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.house-card h2 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+}
+
+.house-card p {
+  margin: 4px 0;
+}
+
+.price {
+  color: #bb86fc;
+  font-weight: bold;
+}
+
+.location {
+  font-style: italic;
+  color: #ccc;
 }
