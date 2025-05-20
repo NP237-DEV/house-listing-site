@@ -32,6 +32,41 @@ a:hover {
   box-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
 
+/* Filter & Search Form */
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 20px;
+  justify-content: center;
+}
+
+.filter-form input,
+.filter-form select,
+.filter-form button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+}
+
+.filter-form input,
+.filter-form select {
+  background-color: #2a2a2a;
+  color: #fff;
+}
+
+.filter-form button {
+  background-color: #bb86fc;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.filter-form button:hover {
+  background-color: #a058f5;
+}
+
 /* House Listing Card Layout */
 .listing-container {
   padding: 20px;
