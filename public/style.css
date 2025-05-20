@@ -6,6 +6,18 @@ body {
   padding: 0;
   margin: 0;
 }
+.filter-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-form select,
+.filter-form button {
+  padding: 5px 10px;
+  font-size: 16px;
+}
 
 h1 {
   color: #fff;
