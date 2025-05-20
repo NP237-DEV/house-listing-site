@@ -41,7 +41,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ROUTES
-
+// Route to show house details
+app.get('/house/:id', (req, res) => {
+  const id = req.params.id;
+  db.get('SELECT * FROM houses WHERE id = ?', [id], (err, row) => {
+    if (err) {
+      return res.send('Error fetching house');
+    }
+    if (!row) {
+      return res.send('House not found');
+    }
+    res.render('details', { house: row });
+  });
+});
 // Homepage - show listings with filter, sort, search
 app.get('/', (req, res) => {
   const search = req.query.search || '';
