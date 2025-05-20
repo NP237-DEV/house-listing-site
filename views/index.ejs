@@ -1,70 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>House Listings</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-
-  <!-- Sticky Header -->
-  <header class="sticky-header">
+  <header>
     <h1>House Listings</h1>
+    <div class="add-house-tab">
+      <a href="/add">Add New House</a>
+    </div>
   </header>
 
-  <!-- Filter/Search Form -->
-  <form class="filter-form" method="GET" action="/">
-    <input type="text" name="search" placeholder="Search by name or location" value="<%= search || '' %>">
-    
-    <select name="sort">
-      <option value="">Sort by</option>
-      <option value="low" <%= sort === 'low' ? 'selected' : '' %>>Price: Low to High</option>
-      <option value="high" <%= sort === 'high' ? 'selected' : '' %>>Price: High to Low</option>
-    </select>
-
-    <button type="submit">Apply</button>
-  </form>
-
-  <!-- Listings -->
-<form action="/" method="GET" class="filter-form">
-  <select name="type">
-    <option value="">All Types</option>
-    <option value="bungalow">Bungalow</option>
-    <option value="flat">Flat</option>
-    <option value="villa">Villa</option>
-    <option value="duplex">Duplex</option>
-  </select>
-
-  <select name="location">
-    <option value="">All Locations</option>
-    <option value="bomaka">Bomaka</option>
-    <option value="malingo">Malingo</option>
-    <option value="bonduma">Bonduma</option>
-  </select>
-
-  <select name="sort">
-    <option value="">Sort by</option>
-    <option value="asc">Price: Low to High</option>
-    <option value="desc">Price: High to Low</option>
-  </select>
-
-  <button type="submit">Apply</button>
-</form>
-  <div class="listing-container">
-    <% houses.forEach(house => { %>
-      <div class="house-card">
-        <% if (house.image_path) { %>
-          <img src="/<%= house.image_path %>" alt="House Image">
-        <% } %>
-        <h2><%= house.name %></h2>
-        <p class="price">Price: $<%= house.price %></p>
-        <p><%= house.description %></p>
-        <p class="location"><%= house.location %></p>
-      </div>
-    <% }) %>
-  </div>
-
-  <!-- Floating Add Button -->
-  <a href="/add" class="floating-btn">+</a>
-
+  <main class="house-list">
+    <% if (houses.length === 0) { %>
+      <p>No houses found.</p>
+    <% } else { %>
+      <% houses.forEach(house => { %>
+        <div class="house-card">
+          <img src="<%= house.imageUrl %>" alt="House Image">
+          <div class="house-details">
+            <h3><%= house.name %></h3>
+            <p><%= house.location %></p>
+            <p>Price: $<%= house.price %></p>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+  </main>
 </body>
 </html>
