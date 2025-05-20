@@ -1,48 +1,30 @@
 const express = require('express');
-const multer = require('multer');
 const sqlite3 = require('sqlite3').verbose();
+const bodyParser = require('body-parser');
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Setup storage for images
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadPath = path.join(__dirname, 'public', 'uploads');
-    fs.mkdirSync(uploadPath, { recursive: true });
-    cb(null, uploadPath);
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage: storage });
-
-// SQLite DB
-const db = new sqlite3.Database('houses.db');
-
-db.serialize(() => {
-  db.run(`CREATE TABLE IF NOT EXISTS houses (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    price INTEGER,
-    description TEXT,
-    location TEXT,
-    image_path TEXT
-  )`);
-});
+const db = new sqlite3.Database('./houses.db');
 
 // Middleware
-app.set('view engine', 'ejs');
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-// ROUTES
+// Create table if not exists
+db.run(`CREATE TABLE IF NOT EXISTS houses (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  price INTEGER NOT NULL,
+  description TEXT,
+  location TEXT,
+  type TEXT
+)`);
+
+// Homepage with filters, search, and sort
 app.get('/', (req, res) => {
-  const { type, location, sort } = req.query;
+  const { type, location, sort, search } = req.query;
   let sql = 'SELECT * FROM houses WHERE 1=1';
   let params = [];
 
@@ -56,6 +38,11 @@ app.get('/', (req, res) => {
     params.push(location);
   }
 
+  if (search) {
+    sql += ' AND (title LIKE ? OR location LIKE ?)';
+    params.push(`%${search}%`, `%${search}%`);
+  }
+
   if (sort === 'asc') {
     sql += ' ORDER BY price ASC';
   } else if (sort === 'desc') {
@@ -63,77 +50,38 @@ app.get('/', (req, res) => {
   }
 
   db.all(sql, params, (err, rows) => {
-    if (err) {
-      return res.send('Error fetching houses');
-    }
-    res.render('index', { houses: rows });
+    if (err) return res.send('Error loading houses');
+    res.render('index', { houses: rows, search });
   });
 });
-// Route to show house details
-app.get('/house/:id', (req, res) => {
+
+// Detail page
+app.get('/listing/:id', (req, res) => {
   const id = req.params.id;
   db.get('SELECT * FROM houses WHERE id = ?', [id], (err, row) => {
-    if (err) {
-      return res.send('Error fetching house');
-    }
-    if (!row) {
-      return res.send('House not found');
-    }
-    res.render('details', { house: row });
-  });
-});
-// Homepage - show listings with filter, sort, search
-app.get('/', (req, res) => {
-  const search = req.query.search || '';
-  const sort = req.query.sort || '';
-
-  let sql = 'SELECT * FROM houses';
-  const params = [];
-
-  if (search) {
-    sql += ' WHERE name LIKE ? OR location LIKE ?';
-    params.push(`%${search}%`, `%${search}%`);
-  }
-
-  if (sort === 'low') {
-    sql += ' ORDER BY price ASC';
-  } else if (sort === 'high') {
-    sql += ' ORDER BY price DESC';
-  }
-
-  db.all(sql, params, (err, rows) => {
-    if (err) {
-      res.send('Database error');
-    } else {
-      res.render('index', { houses: rows, search, sort });
-    }
+    if (err || !row) return res.send('Listing not found');
+    res.render('detail', { house: row });
   });
 });
 
-// Show add house form
+// Add new listing page
 app.get('/add', (req, res) => {
   res.render('add');
 });
 
-// Handle new house submission
-app.post('/add', upload.single('image'), (req, res) => {
-  const { name, price, description, location } = req.body;
-  const image_path = req.file ? 'uploads/' + req.file.filename : null;
-
+// Handle add new listing
+app.post('/add', (req, res) => {
+  const { title, price, description, location, type } = req.body;
   db.run(
-    'INSERT INTO houses (name, price, description, location, image_path) VALUES (?, ?, ?, ?, ?)',
-    [name, price, description, location, image_path],
-    (err) => {
-      if (err) {
-        res.send('Error saving to database');
-      } else {
-        res.redirect('/');
-      }
+    'INSERT INTO houses (title, price, description, location, type) VALUES (?, ?, ?, ?, ?)',
+    [title, price, description, location, type],
+    err => {
+      if (err) return res.send('Failed to add listing');
+      res.redirect('/');
     }
   );
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
