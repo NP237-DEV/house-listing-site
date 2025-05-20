@@ -5,9 +5,13 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>House Listings</h1>
-  <a href="/add">+ Add New Listing</a>
 
+  <!-- Sticky Header -->
+  <header class="sticky-header">
+    <h1>House Listings</h1>
+  </header>
+
+  <!-- Listings -->
   <div class="listing-container">
     <% houses.forEach(house => { %>
       <div class="house-card">
@@ -21,5 +25,9 @@
       </div>
     <% }) %>
   </div>
+
+  <!-- Floating Add Button -->
+  <a href="/add" class="floating-btn">+</a>
+
 </body>
 </html>
