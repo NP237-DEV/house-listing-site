@@ -1,102 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Add House</title>
-  <style>
-    body {
-      background-color: #f9f9f9;
-      font-family: Arial, sans-serif;
-      padding: 1rem;
-      margin: 0;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      text-align: center;
-      color: #4B0082;
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    textarea,
-    input[type="file"] {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-      background: #f0f0f0;
-    }
-
-    textarea {
-      resize: vertical;
-      height: 100px;
-    }
-
-    input[type="submit"] {
-      background-color: #4B0082;
-      color: white;
-      padding: 12px;
-      margin-top: 20px;
-      border: none;
-      border-radius: 6px;
-      width: 100%;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    input[type="submit"]:hover {
-      background-color: #360060;
-    }
-
-    a {
-      text-decoration: none;
-      color: #4B0082;
-      display: block;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-  </style>
+  <title>Add New House</title>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <div class="container">
-    <a href="/">← Back to Listings</a>
-    <h1>Add New House</h1>
-    <form action="/add" method="POST" enctype="multipart/form-data">
-      <label for="name">House Name:</label>
-      <input type="text" name="name" id="name" required />
+  <h1>Add a New House</h1>
+  <a href="/">← Back to Listings</a>
 
-      <label for="price">Price ($):</label>
-      <input type="number" name="price" id="price" required />
+  <form action="/add" method="POST" enctype="multipart/form-data" class="add-form">
+    <label for="name">House Name:</label>
+    <input type="text" name="name" id="name" required>
 
-      <label for="description">Description:</label>
-      <textarea name="description" id="description" required></textarea>
+    <label for="price">Price ($):</label>
+    <input type="number" name="price" id="price" required>
 
-      <label for="location">Location:</label>
-      <input type="text" name="location" id="location" required />
+    <label for="description">Description:</label>
+    <textarea name="description" id="description" required></textarea>
 
-      <label for="image">Image:</label>
-      <input type="file" name="image" id="image" accept="image/*" />
+    <label for="location">Location:</label>
+    <input type="text" name="location" id="location" required>
 
-      <input type="submit" value="Add Listing" />
-    </form>
-  </div>
+    <label for="image">Upload Image:</label>
+    <input type="file" name="image" id="image" accept="image/*">
+
+    <button type="submit">Submit</button>
+  </form>
 </body>
 </html>
