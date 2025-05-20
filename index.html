@@ -1,82 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>House Listings</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f4f4f4;
-      color: #333;
-    }
-    header {
-      background: #333;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-    nav {
-      background: #444;
-      display: flex;
-      justify-content: center;
-    }
-    nav a {
-      color: white;
-      padding: 1rem;
-      text-decoration: none;
-    }
-    nav a:hover {
-      background: #222;
-    }
-    .container {
-      padding: 1.5rem;
-    }
-    .card {
-      background: white;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 6px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    h2 {
-      margin-top: 0;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>House Listings</h1>
-  </header>
+body {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background-color: #f4f4f4;
+  color: #333;
+}
 
-  <nav>
-    <a href="#">Home</a>
-    <a href="#post">Post Listing</a>
-  </nav>
+h1, h2 {
+  color: #2c3e50;
+}
 
-  <div class="container">
-    <section>
-      <h2>Available Houses</h2>
+a {
+  display: inline-block;
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: #2980b9;
+}
 
-      <div class="card">
-        <h3>3 Bedroom House in Boom Town</h3>
-        <p><strong>Price:</strong> $102</p>
-        <p><strong>Description:</strong> Very cheap</p>
-      </div>
+form {
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-      <!-- Add more listings here -->
-    </section>
+input, textarea, button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-    <section id="post">
-      <h2>Post a New Listing</h2>
-      <form>
-        <input type="text" placeholder="Title" required/><br/><br/>
-        <input type="text" placeholder="Price" required/><br/><br/>
-        <textarea placeholder="Description" rows="4" required></textarea><br/><br/>
-        <button type="submit">Submit</button>
-      </form>
-    </section>
-  </div>
-</body>
-</html>
+button {
+  background-color: #2980b9;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: white;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+  border-radius: 5px;
+}
