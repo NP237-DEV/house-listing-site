@@ -1,62 +1,70 @@
-body {
-  font-family: Arial, sans-serif;
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-  background-color: #f4f4f4;
-  color: #333;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>House Listings</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background-color: #4B0082;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 1rem;
+    }
+    .add-button {
+      display: inline-block;
+      margin-bottom: 1rem;
+      background-color: #4B0082;
+      color: white;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .card {
+      background: white;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .card h3 {
+      margin-top: 0;
+    }
+    .card p {
+      margin: 0.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>House Listings</h1>
+  </header>
+  <div class="container">
+    <a class="add-button" href="/add">+ Add New Listing</a>
 
-h1, h2 {
-  color: #2c3e50;
-}
+    <!-- Loop starts here -->
+    <% houses.forEach(house => { %>
+      <div class="card">
+        <h3><%= house.name %></h3>
+        <p><strong>Price:</strong> $<%= house.price %></p>
+        <p><%= house.description %></p>
+        <p><strong>Location:</strong> <%= house.location %></p>
+        <p><strong>Bedrooms:</strong> <%= house.bedrooms %>, <strong>Rooms:</strong> <%= house.rooms %></p>
+      </div>
+    <% }); %>
+    <!-- Loop ends here -->
 
-a {
-  display: inline-block;
-  margin-bottom: 20px;
-  text-decoration: none;
-  color: #2980b9;
-}
-
-form {
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-input, textarea, button {
-  width: 100%;
-  padding: 8px;
-  margin-top: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-button {
-  background-color: #2980b9;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  background: white;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-  margin-top: 10px;
-  border-radius: 5px;
-}
+  </div>
+</body>
+</html>
