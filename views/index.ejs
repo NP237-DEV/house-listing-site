@@ -2,52 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>House Listings</title>
   <style>
     body {
-      background-color: #121212;
-      color: #fff;
-      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
     }
-    h1 {
-      color: #ffffff;
-      margin-bottom: 10px;
+    header {
+      background-color: #4B0082;
+      color: white;
+      padding: 1rem;
+      text-align: center;
     }
-    a {
-      color: #9c6bff;
-      text-decoration: none;
-      margin-bottom: 20px;
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 1rem;
+    }
+    .add-button {
       display: inline-block;
+      margin-bottom: 1rem;
+      background-color: #4B0082;
+      color: white;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      border-radius: 4px;
     }
-    .listing {
-      border: 1px solid #333;
+    .card {
+      background: white;
+      padding: 1rem;
+      margin-bottom: 1rem;
       border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 15px;
-      background-color: #1e1e1e;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .price {
-      font-weight: bold;
-      margin-bottom: 5px;
+    .card h3 {
+      margin-top: 0;
     }
-    .description {
-      color: #ccc;
+    .card p {
+      margin: 0.5rem 0;
+    }
+    .card img {
+      width: 100%;
+      border-radius: 6px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>House Listings</h1>
-  <a href="/add">+ Add New Listing</a>
+  <header>
+    <h1>House Listings</h1>
+  </header>
+  <div class="container">
+    <a class="add-button" href="/add">+ Add New Listing</a>
 
-  <% houses.forEach(house => { %>
-    <div class="listing">
-      <div><strong><%= house.title %></strong></div>
-      <div class="price">Price: $<%= house.price %></div>
-      <div class="description"><%= house.description %></div>
-    </div>
-  <% }) %>
+    <% houses.forEach(house => { %>
+      <div class="card">
+        <h3><%= house.name %></h3>
+        <p><strong>Price:</strong> $<%= house.price %></p>
+        <p><%= house.description %></p>
+        <p><strong>Location:</strong> <%= house.location %></p>
+        <% if (house.image_path) { %>
+          <img src="/<%= house.image_path %>" alt="House Image">
+        <% } %>
+      </div>
+    <% }); %>
+
+  </div>
 </body>
 </html>
