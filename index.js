@@ -45,17 +45,30 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/add', (req, res) => {
-  res.send(`
+ res.send(`
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>House Listings</title>
     <link rel="stylesheet" href="/style.css">
-    <h1>Post a House for Sale</h1>
-    <form method="POST" action="/add" enctype="multipart/form-data">
-      <label>Title: <input name="title" required></label><br>
-      <label>Price: <input name="price" type="number" required></label><br>
-      <label>Description:<br><textarea name="description" required></textarea></label><br>
-      <label>Image: <input type="file" name="image" accept="image/*" required></label><br>
-      <button type="submit">Post Listing</button>
-    </form>
-  `);
+  </head>
+  <body>
+    <h1>Houses for Sale</h1>
+    <a href="/add">Post a New Listing</a>
+    <ul>
+      ${results.rows.map(row => `
+        <li>
+          <h2>${row.title}</h2>
+          <p><strong>Price:</strong> $${row.price}</p>
+          <p>${row.description}</p>
+          <img src="${row.imageurl}" alt="${row.title}">
+        </li>
+      `).join('')}
+    </ul>
+  </body>
+  </html>
+`);
+        
 });
 
 app.post('/add', upload.single('image'), async (req, res) => {
