@@ -1,114 +1,111 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const multer = require('multer');
-const streamifier = require('streamifier');
+const path = require('path');
 const { Pool } = require('pg');
-const cloudinary = require('cloudinary').v2;
+const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const upload = multer();
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
+app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.join(__dirname, 'public')));
 
+// Set up PostgreSQL
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+// Upload image setup
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const dir = './uploads';
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+    cb(null, dir);
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage });
 
+// Homepage - show listings
 app.get('/', async (req, res) => {
-  const result = await pool.query('SELECT * FROM listings ORDER BY id DESC');
-  const listings = result.rows;
+  try {
+    const results = await pool.query('SELECT * FROM houses ORDER BY id DESC');
 
-  let html = `
-    <h1>Houses for Sale</h1>
-    <a href="/add">Post a New Listing</a>
-    <ul>
-      ${listings.map(listing => `
-        <li>
-          <h2>${listing.title}</h2>
-          <p>Price: $${listing.price}</p>
-          <p>${listing.description}</p>
-          ${listing.image_url ? `<img src="${listing.image_url}" width="300">` : ''}
-        </li>
-      `).join('')}
-    </ul>
-  `;
-  res.send(html);
+    res.send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>House Listings</title>
+        <link rel="stylesheet" href="/style.css">
+      </head>
+      <body>
+        <h1>Houses for Sale</h1>
+        <a href="/add">Post a New Listing</a>
+        <ul>
+          ${results.rows.map(row => `
+            <li>
+              <h2>${row.title}</h2>
+              <p><strong>Price:</strong> $${row.price}</p>
+              <p>${row.description}</p>
+              <img src="${row.imageurl}" alt="${row.title}" width="300">
+            </li>
+          `).join('')}
+        </ul>
+      </body>
+      </html>
+    `);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error loading listings.");
+  }
 });
 
+// Show form
 app.get('/add', (req, res) => {
- res.send(`
-  <!DOCTYPE html>
-  <html>
-  <head>
-    <title>House Listings</title>
-    <link rel="stylesheet" href="/style.css">
-  </head>
-  <body>
-    <h1>Houses for Sale</h1>
-    <a href="/add">Post a New Listing</a>
-    <ul>
-      ${results.rows.map(row => `
-        <li>
-          <h2>${row.title}</h2>
-          <p><strong>Price:</strong> $${row.price}</p>
-          <p>${row.description}</p>
-          <img src="${row.imageurl}" alt="${row.title}">
-        </li>
-      `).join('')}
-    </ul>
-  </body>
-  </html>
-`);
-        
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Add Listing</title>
+      <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+      <h2>Post a House for Sale</h2>
+      <form action="/add" method="post" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Title" required><br>
+        <input type="number" name="price" placeholder="Price" required><br>
+        <textarea name="description" placeholder="Description" required></textarea><br>
+        <input type="file" name="image" accept="image/*" required><br>
+        <button type="submit">Post Listing</button>
+      </form>
+    </body>
+    </html>
+  `);
 });
 
+// Handle form
 app.post('/add', upload.single('image'), async (req, res) => {
   const { title, price, description } = req.body;
-  let imageUrl = null;
+  const imageurl = req.file ? '/uploads/' + req.file.filename : '';
 
-  if (req.file) {
-    const stream = cloudinary.uploader.upload_stream((error, result) => {
-      if (error) {
-        console.error('Cloudinary Error:', error);
-        res.status(500).send('Image upload failed');
-      } else {
-        imageUrl = result.secure_url;
-        saveListing();
-      }
-    });
-
-    streamifier.createReadStream(req.file.buffer).pipe(stream);
-  } else {
-    saveListing();
-  }
-
-  async function saveListing() {
+  try {
     await pool.query(
-      'INSERT INTO listings (title, price, description, image_url) VALUES ($1, $2, $3, $4)',
-      [title, price, description, imageUrl]
+      'INSERT INTO houses (title, price, description, imageurl) VALUES ($1, $2, $3, $4)',
+      [title, price, description, imageurl]
     );
     res.redirect('/');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error saving listing.');
   }
 });
 
-app.listen(port, async () => {
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS listings (
-      id SERIAL PRIMARY KEY,
-      title TEXT,
-      price NUMERIC,
-      description TEXT,
-      image_url TEXT
-    )
-  `);
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
