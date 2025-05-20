@@ -1,55 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Add House Listing</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add House</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #121212;
-      color: #f1f1f1;
-      padding: 20px;
+      background-color: #f9f9f9;
+      font-family: Arial, sans-serif;
+      padding: 1rem;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     h1 {
-      color: #fff;
-      margin-bottom: 20px;
-    }
-
-    a {
-      color: #bb86fc;
-      text-decoration: none;
-      display: inline-block;
-      margin-bottom: 20px;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    form {
-      max-width: 500px;
-      background-color: #1e1e1e;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      text-align: center;
+      color: #4B0082;
     }
 
     label {
       display: block;
-      margin-bottom: 8px;
-      margin-top: 16px;
+      margin-top: 15px;
       font-weight: bold;
     }
 
     input[type="text"],
     input[type="number"],
-    textarea {
+    textarea,
+    input[type="file"] {
       width: 100%;
       padding: 10px;
-      border-radius: 8px;
-      border: none;
-      background-color: #2c2c2c;
-      color: #fff;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      background: #f0f0f0;
     }
 
     textarea {
@@ -58,41 +51,52 @@
     }
 
     input[type="submit"] {
+      background-color: #4B0082;
+      color: white;
+      padding: 12px;
       margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #bb86fc;
-      color: #121212;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
+      width: 100%;
+      font-size: 16px;
       cursor: pointer;
-      font-weight: bold;
     }
 
     input[type="submit"]:hover {
-      background-color: #9b6cd1;
+      background-color: #360060;
+    }
+
+    a {
+      text-decoration: none;
+      color: #4B0082;
+      display: block;
+      margin-bottom: 20px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <a href="/">← Back to Listings</a>
-  <h1>Add New House</h1>
-  <form action="/add" method="POST" enctype="multipart/form-data">
-    <label for="name">House Name:</label>
-    <input type="text" name="name" id="name" required>
+  <div class="container">
+    <a href="/">← Back to Listings</a>
+    <h1>Add New House</h1>
+    <form action="/add" method="POST" enctype="multipart/form-data">
+      <label for="name">House Name:</label>
+      <input type="text" name="name" id="name" required />
 
-    <label for="price">Price ($):</label>
-    <input type="number" name="price" id="price" required>
+      <label for="price">Price ($):</label>
+      <input type="number" name="price" id="price" required />
 
-    <label for="description">Description:</label>
-    <textarea name="description" id="description" required></textarea>
+      <label for="description">Description:</label>
+      <textarea name="description" id="description" required></textarea>
 
-    <label for="location">Location:</label>
-    <input type="text" name="location" id="location" required>
+      <label for="location">Location:</label>
+      <input type="text" name="location" id="location" required />
 
-    <label for="image">Upload Image:</label>
-    <input type="file" name="image" id="image" accept="image/*">
+      <label for="image">Image:</label>
+      <input type="file" name="image" id="image" accept="image/*" />
 
-    <input type="submit" value="Add Listing">
-  </form>
+      <input type="submit" value="Add Listing" />
+    </form>
+  </div>
 </body>
 </html>
