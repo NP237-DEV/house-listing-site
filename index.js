@@ -63,15 +63,23 @@ app.get('/add', (req, res) => {
 });
 
 // Handle add form submission
-app.post('/add', (req, res) => {
-  const { name, location, price, description, image } = req.body;
-  const stmt = db.prepare('INSERT INTO houses (name, location, price, description, image) VALUES (?, ?, ?, ?, ?)');
-  stmt.run(name, location, price, description, image, err => {
-    if (err) {
-      return res.status(500).send('Failed to add listing');
-    }
-    res.redirect('/');
-  });
+
+app.post("/add", (req, res) => {
+  const { name, location, price, imageUrl, description, amenities, contact } = req.body;
+
+  const newHouse = {
+    id: Date.now().toString(),
+    name,
+    location,
+    price,
+    imageUrl,
+    description,
+    amenities,
+    contact
+  };
+
+  houses.push(newHouse);
+  res.redirect("/");
 });
 
 // Start server
