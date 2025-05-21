@@ -18,14 +18,16 @@
       <p>No houses found.</p>
     <% } else { %>
       <% houses.forEach(house => { %>
-        <div class="house-card">
-          <img src="<%= house.imageUrl %>" alt="House Image">
-          <div class="house-details">
-            <h3><%= house.name %></h3>
-            <p><%= house.location %></p>
-            <p>Price: $<%= house.price %></p>
+        <a href="/house/<%= house._id %>" class="house-card-link">
+          <div class="house-card">
+            <img src="<%= house.imageUrl %>" alt="House Image">
+            <div class="house-details">
+              <h3><%= house.name %></h3>
+              <p><%= house.location %></p>
+              <p>Price: $<%= house.price %></p>
+            </div>
           </div>
-        </div>
+        </a>
       <% }) %>
     <% } %>
   </main>
