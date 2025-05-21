@@ -1,33 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Add New House</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-
-  <header class="sticky-header">
-    <h1>Add a New House Listing</h1>
+  <header>
+    <h1>Add New House</h1>
+    <a href="/" class="back-link">← Back to Listings</a>
   </header>
 
-  <form class="add-form" action="/add" method="POST" enctype="multipart/form-data">
-    <label for="name">House Name:</label>
-    <input type="text" id="name" name="name" required>
+  <main class="form-container">
+    <form action="/add" method="POST">
+      <label>House Name</label>
+      <input type="text" name="name" required>
 
-    <label for="price">Price ($):</label>
-    <input type="number" id="price" name="price" required>
+      <label>Location</label>
+      <input type="text" name="location" required>
 
-    <label for="location">Location:</label>
-    <input type="text" id="location" name="location" required>
+      <label>Price</label>
+      <input type="number" name="price" required>
 
-    <label for="description">Description:</label>
-    <textarea id="description" name="description" rows="4" required></textarea>
+      <label>Image URL</label>
+      <input type="text" name="imageUrl" required>
 
-    <label for="image">Upload Image:</label>
-    <input type="file" id="image" name="image" accept="image/*">
+      <label>Description</label>
+      <textarea name="description" rows="3"></textarea>
 
-    <button type="submit">Post Listing</button>
-  </form>
+      <label>Amenities (comma separated)</label>
+      <input type="text" name="amenities">
 
+      <label>Contact Info</label>
+      <input type="text" name="contact">
+
+      <button type="submit">Add House</button>
+    </form>
+  </main>
 </body>
 </html>
