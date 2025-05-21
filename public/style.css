@@ -112,3 +112,12 @@ header h1 {
   border-radius: 10px;
   overflow: hidden;
 }
+
+.section ul {
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.section ul li {
+  margin-bottom: 5px;
+}
