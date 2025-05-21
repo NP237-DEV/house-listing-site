@@ -2,13 +2,27 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
   api_secret: process.env.CLOUD_API_SECRET
 });
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'house-listings',
+    allowed_formats: ['jpg', 'jpeg', 'png']
+  }
+});
+
+const upload = multer({ storage: storage });
+
 
 // Middleware to parse form data
 app.use(express.urlencoded({ extended: true }));
