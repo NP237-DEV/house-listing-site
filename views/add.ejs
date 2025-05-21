@@ -12,37 +12,54 @@
     <a href="/" class="back-link">← Back to Listings</a>
   </header>
 
-  <main>
-  <div class="form-container">
-    <h2>Add New House</h2>
-    <form action="/houses" method="POST">
-      <label>House Name:</label>
-      <input type="text" name="name" required />
+  <main class="min-h-screen bg-gray-900 text-white flex items-center justify-center px-4">
+  <div class="w-full max-w-md bg-gray-800 p-6 rounded-lg shadow-md">
+    <h2 class="text-xl font-bold mb-6 text-center">Add New House</h2>
 
-      <label>Location:</label>
-      <input type="text" name="location" required />
+    <form action="/add" method="POST" class="space-y-4">
+      <div>
+        <label class="block mb-1">House Name</label>
+        <input type="text" name="name" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded" required>
+      </div>
 
-      <label>Price:</label>
-      <input type="number" name="price" required />
+      <div>
+        <label class="block mb-1">Location</label>
+        <input type="text" name="location" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded" required>
+      </div>
 
-      <label>Image URL:</label>
-      <input type="text" name="imageUrl" />
+      <div>
+        <label class="block mb-1">Price</label>
+        <input type="number" name="price" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded" required>
+      </div>
 
-      <label>Year or State:</label>
-      <input type="text" name="year" />
+      <div>
+        <label class="block mb-1">Image URL</label>
+        <input type="text" name="image" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded">
+      </div>
 
-      <label>Description:</label>
-      <textarea name="description" rows="3"></textarea>
+      <div>
+        <label class="block mb-1">Description</label>
+        <textarea name="description" rows="3" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded"></textarea>
+      </div>
 
-      <label>Amenities (comma separated):</label>
-      <input type="text" name="amenities" />
+      <div>
+        <label class="block mb-1">Amenities (comma separated)</label>
+        <input type="text" name="amenities" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded">
+      </div>
 
-      <label>Contact Info:</label>
-      <input type="text" name="contact" required />
+      <div>
+        <label class="block mb-1">Contact Info</label>
+        <input type="text" name="contact" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded">
+      </div>
 
-      <button type="submit">Add House</button>
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">
+        Add House
+      </button>
+
+      <div class="text-center mt-4">
+        <a href="/" class="text-blue-400 hover:underline">← Back to Listings</a>
+      </div>
     </form>
-    <a href="/houses" class="back-link">← Back to Listings</a>
   </div>
 </main>
 </body>
