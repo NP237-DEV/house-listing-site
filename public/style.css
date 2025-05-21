@@ -42,6 +42,10 @@ header h1 {
   gap: 20px;
 }
 
+.house-card-link {
+  text-decoration: none;
+  color: inherit;
+}
 .house-card {
   background: white;
   border-radius: 8px;
