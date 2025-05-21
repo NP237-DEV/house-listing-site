@@ -105,3 +105,10 @@ header h1 {
   color: #007bff;
   font-weight: bold;
 }
+
+
+.map-container {
+  margin-top: 1rem;
+  border-radius: 10px;
+  overflow: hidden;
+}
