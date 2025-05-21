@@ -48,22 +48,19 @@ app.get('/add', (req, res) => {
 });
 
 // Handle new house form submission
-app.post('/add', (req, res) => {
-  const { name, location, price, image, description, amenities, contact } = req.body;
 
-  if (!name || !location || !price) {
-    return res.status(400).send("Missing required fields");
-  }
+app.post('/add', upload.single('image'), (req, res) => {
+  const { name, location, price, description, amenities, contact } = req.body;
 
   const newHouse = {
     id: Date.now().toString(),
     name,
     location,
     price,
-    image: image || '',
-    description: description || '',
-    amenities: amenities || '',
-    contact: contact || ''
+    image: req.file.path, // Cloudinary URL
+    description,
+    amenities,
+    contact
   };
 
   houses.push(newHouse);
