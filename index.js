@@ -1,88 +1,66 @@
 const express = require('express');
 const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
-const bodyParser = require('body-parser');
-
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-const db = new sqlite3.Database('./houses.db');
+// Middleware to parse form data
+app.use(express.urlencoded({ extended: true }));
 
-// Middleware
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+// Set view engine to EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Create table if not exists
-db.run(`
-  CREATE TABLE IF NOT EXISTS houses (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    location TEXT,
-    price INTEGER,
-    description TEXT,
-    image TEXT
-  )
-`);
+// Serve static files like CSS, images, etc.
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Home - show listings with filter, sort, search
+// In-memory storage for house listings
+let houses = [];
+
+// Home page: list all houses
 app.get('/', (req, res) => {
-  const { search, sort } = req.query;
-  let query = 'SELECT * FROM houses';
-  const params = [];
-
-  if (search) {
-    query += ' WHERE name LIKE ? OR location LIKE ?';
-    params.push(`%${search}%`, `%${search}%`);
-  }
-
-  if (sort === 'low') {
-    query += ' ORDER BY price ASC';
-  } else if (sort === 'high') {
-    query += ' ORDER BY price DESC';
-  }
-
-  db.all(query, params, (err, rows) => {
-    if (err) {
-      return res.status(500).send('Database error');
-    }
-    res.render('index', { houses: rows, search: search || '', sort: sort || '' });
-  });
+  res.render('index', { houses });
 });
 
-    //ROUTE  stuffff
-
-app.get('/house/:id', async (req, res) => {
-  const house = await House.findById(req.params.id);
-  res.render('detail', { house });
-});
-// Add house form
+// Form page to add new house
 app.get('/add', (req, res) => {
   res.render('add');
 });
 
-// Handle add form submission
+// Handle new house form submission
+app.post('/add', (req, res) => {
+  const { name, location, price, image, description, amenities, contact } = req.body;
 
-app.post("/add", (req, res) => {
-  const { name, location, price, imageUrl, description, amenities, contact } = req.body;
+  if (!name || !location || !price) {
+    return res.status(400).send("Missing required fields");
+  }
 
   const newHouse = {
     id: Date.now().toString(),
     name,
     location,
     price,
-    imageUrl,
-    description,
-    amenities,
-    contact
+    image: image || '',
+    description: description || '',
+    amenities: amenities || '',
+    contact: contact || ''
   };
 
   houses.push(newHouse);
-  res.redirect("/");
+  res.redirect('/');
+});
+
+// Detail page for a specific house
+app.get('/houses/:id', (req, res) => {
+  const house = houses.find(h => h.id === req.params.id);
+
+  if (!house) {
+    return res.status(404).send("House not found");
+  }
+
+  res.render('detail', { house });
 });
 
 // Start server
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
