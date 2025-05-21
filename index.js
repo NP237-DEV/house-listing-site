@@ -51,6 +51,7 @@ app.get('/', (req, res) => {
   });
 });
 
+    //ROUTE  stuffff
 
 app.get('/house/:id', async (req, res) => {
   const house = await House.findById(req.params.id);
