@@ -11,31 +11,38 @@
     <a href="/" class="back-link">← Back to Listings</a>
   </header>
 
-  <main class="form-container">
-    <form action="/add" method="POST">
-      <label>House Name</label>
-      <input type="text" name="name" required>
+  <main>
+  <div class="form-container">
+    <h2>Add New House</h2>
+    <form action="/houses" method="POST">
+      <label>House Name:</label>
+      <input type="text" name="name" required />
 
-      <label>Location</label>
-      <input type="text" name="location" required>
+      <label>Location:</label>
+      <input type="text" name="location" required />
 
-      <label>Price</label>
-      <input type="number" name="price" required>
+      <label>Price:</label>
+      <input type="number" name="price" required />
 
-      <label>Image URL</label>
-      <input type="text" name="imageUrl" required>
+      <label>Image URL:</label>
+      <input type="text" name="imageUrl" />
 
-      <label>Description</label>
+      <label>Year or State:</label>
+      <input type="text" name="year" />
+
+      <label>Description:</label>
       <textarea name="description" rows="3"></textarea>
 
-      <label>Amenities (comma separated)</label>
-      <input type="text" name="amenities">
+      <label>Amenities (comma separated):</label>
+      <input type="text" name="amenities" />
 
-      <label>Contact Info</label>
-      <input type="text" name="contact">
+      <label>Contact Info:</label>
+      <input type="text" name="contact" required />
 
       <button type="submit">Add House</button>
     </form>
-  </main>
+    <a href="/houses" class="back-link">← Back to Listings</a>
+  </div>
+</main>
 </body>
 </html>
