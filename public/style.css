@@ -75,3 +75,33 @@ header h1 {
 .house-details p {
   margin: 5px 0;
 }
+.detail-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.detail-image img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.detail-info p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.back-link {
+  display: inline-block;
+  margin: 1rem;
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+}
