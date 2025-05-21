@@ -12,5 +12,6 @@
   "sqlite3": "^5.1.2",
   "body-parser": "^1.20.2",
   "multer": "^1.4.4"
+  "cloudinary": "^1.32.0",
 }
 }
