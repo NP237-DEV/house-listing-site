@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= house.name %> - Details</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <h1><%= house.name %></h1>
+    <a href="/" class="back-link">← Back to Listings</a>
+  </header>
+
+  <main class="detail-container">
+    <div class="detail-image">
+      <img src="<%= house.imageUrl %>" alt="House Image">
+    </div>
+    <div class="detail-info">
+      <p><strong>Location:</strong> <%= house.location %></p>
+      <p><strong>Price:</strong> $<%= house.price %></p>
+      <p><strong>Description:</strong> <%= house.description || "No description provided." %></p>
+    </div>
+  </main>
+</body>
+</html>
