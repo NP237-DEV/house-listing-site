@@ -14,48 +14,17 @@
 <main class="min-h-screen bg-gray-900 text-white flex items-center justify-center px-4 py-8">
   <div class="bg-gray-800 p-6 rounded-lg w-full max-w-lg shadow">
     <h1 class="text-2xl font-bold mb-6">Add New House</h1>
-    
-    <form action="/add" method="POST" class="space-y-4">
-      <div>
-        <label class="block mb-1">House Name</label>
-        <input type="text" name="name" class="w-full p-2 rounded bg-gray-700 text-white" required>
-      </div>
-
-      <div>
-        <label class="block mb-1">Location</label>
-        <input type="text" name="location" class="w-full p-2 rounded bg-gray-700 text-white" required>
-      </div>
-
-      <div>
-        <label class="block mb-1">Price</label>
-        <input type="number" name="price" class="w-full p-2 rounded bg-gray-700 text-white" required>
-      </div>
-
-      <div>
-        <label class="block mb-1">Image URL</label>
-        <input type="url" name="image" class="w-full p-2 rounded bg-gray-700 text-white">
-      </div>
-
-      <div>
-        <label class="block mb-1">Description</label>
-        <textarea name="description" class="w-full p-2 rounded bg-gray-700 text-white"></textarea>
-      </div>
-
-      <div>
-        <label class="block mb-1">Amenities (comma separated)</label>
-        <input type="text" name="amenities" class="w-full p-2 rounded bg-gray-700 text-white">
-      </div>
-
-      <div>
-        <label class="block mb-1">Contact Info</label>
-        <input type="text" name="contact" class="w-full p-2 rounded bg-gray-700 text-white">
-      </div>
-
-      <div class="text-right">
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Add House</button>
-      </div>
-    </form>
-
+    <form action="/add" method="POST" enctype="multipart/form-data">
+  <input type="text" name="name" placeholder="House Name" required><br>
+  <input type="text" name="location" placeholder="Location" required><br>
+  <input type="text" name="price" placeholder="Price" required><br>
+  <input type="file" name="image" accept="image/*" required><br>
+  <textarea name="description" placeholder="Description"></textarea><br>
+  <input type="text" name="amenities" placeholder="Amenities (comma-separated)"><br>
+  <input type="text" name="contact" placeholder="Contact info"><br>
+  <button type="submit">Add House</button>
+</form>
+  
     <div class="mt-4">
       <a href="/" class="text-blue-400 hover:underline">← Back to Listings</a>
     </div>
