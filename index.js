@@ -51,6 +51,18 @@ app.get('/', (req, res) => {
   });
 });
 
+ // Detail page route — place this after your home/listing route
+app.get('/house/:id', async (req, res) => {
+  try {
+    const house = await House.findById(req.params.id);
+    if (!house) {
+      return res.status(404).send('House not found');
+    }
+    res.render('detail', { house });
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
+});
 // Add house form
 app.get('/add', (req, res) => {
   res.render('add');
