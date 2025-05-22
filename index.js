@@ -1,136 +1,38 @@
-const express = require('express');
-const path = require('path');
+// index.js const express = require('express'); const mongoose = require('mongoose'); const bodyParser = require('body-parser'); const methodOverride = require('method-override'); const multer = require('multer'); const cloudinary = require('cloudinary').v2; const { CloudinaryStorage } = require('multer-storage-cloudinary'); const path = require('path'); require('dotenv').config();
+
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-const express = require('express');
-const app = express();
-const mongoose = require('mongoose');
-const House = require('./models/House'); // Your Mongoose model
-const bodyParser = require('body-parser');
-const methodOverride = require('method-override');
+// Cloudinary config cloudinary.config({ cloud_name: process.env.CLOUDINARY_CLOUD_NAME, api_key: process.env.CLOUDINARY_API_KEY, api_secret: process.env.CLOUDINARY_API_SECRET, });
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(methodOverride('_method'));
+const storage = new CloudinaryStorage({ cloudinary: cloudinary, params: { folder: 'house_images', allowed_formats: ['jpg', 'png', 'jpeg'], }, }); const upload = multer({ storage });
 
-// Delete Route
-app.post('/delete/:id', async (req, res) => {
-  try {
-    await House.findByIdAndDelete(req.params.id);
-    res.redirect('/');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error deleting house.');
-  }
-});
+const House = require('./models/House');
 
-// Edit Form Route
-app.get('/edit/:id', async (req, res) => {
-  try {
-    const house = await House.findById(req.params.id);
-    if (!house) return res.status(404).send('House not found');
-    res.render('edit', { house });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error loading edit form.');
-  }
-});
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, });
 
-// Update House Route
-app.post('/edit/:id', async (req, res) => {
-  try {
-    const updatedData = {
-      name: req.body.name,
-      location: req.body.location,
-      price: req.body.price,
-      description: req.body.description,
-      amenities: req.body.amenities.split(',').map(a => a.trim()),
-      contact: req.body.contact
-    };
-    await House.findByIdAndUpdate(req.params.id, updatedData);
-    res.redirect(`/detail/${req.params.id}`);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error updating house.');
-  }
-});
+app.set('view engine', 'ejs'); app.set('views', path.join(__dirname, 'views'));
 
-const multer = require('multer');
-const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
+app.use(express.static(path.join(__dirname, 'public'))); app.use(bodyParser.urlencoded({ extended: true })); app.use(methodOverride('_method'));
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET
-});
+// Home - list houses app.get('/', async (req, res) => { const houses = await House.find(); res.render('index', { houses }); });
 
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'house-listings',
-    allowed_formats: ['jpg', 'jpeg', 'png']
-  }
-});
+// Detail page app.get('/detail/:id', async (req, res) => { const house = await House.findById(req.params.id); res.render('detail', { house }); });
 
-const upload = multer({ storage: storage });
+// Add house form app.get('/add', (req, res) => { res.render('add'); });
 
+// Create new house app.post('/add', upload.single('image'), async (req, res) => { const result = await cloudinary.uploader.upload(req.file.path);
 
-// Middleware to parse form data
-app.use(express.urlencoded({ extended: true }));
+const newHouse = new House({ name: req.body.name, location: req.body.location, price: req.body.price, image: result.secure_url, description: req.body.description, amenities: req.body.amenities.split(',').map(item => item.trim()), contact: req.body.contact, });
 
-// Set view engine to EJS
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+await newHouse.save(); res.redirect('/'); });
 
-// Serve static files like CSS, images, etc.
-app.use(express.static(path.join(__dirname, 'public')));
+// Edit form app.get('/edit/:id', async (req, res) => { const house = await House.findById(req.params.id); res.render('edit', { house }); });
 
-// In-memory storage for house listings
-let houses = [];
+// Update house app.post('/edit/:id', async (req, res) => { const updatedData = { name: req.body.name, location: req.body.location, price: req.body.price, description: req.body.description, amenities: req.body.amenities.split(',').map(item => item.trim()), contact: req.body.contact, };
 
-// Home page: list all houses
-app.get('/', (req, res) => {
-  res.render('index', { houses });
-});
+await House.findByIdAndUpdate(req.params.id, updatedData); res.redirect(/detail/${req.params.id}); });
 
-// Form page to add new house
-app.get('/add', (req, res) => {
-  res.render('add');
-});
+// Delete house app.post('/delete/:id', async (req, res) => { await House.findByIdAndDelete(req.params.id); res.redirect('/'); });
 
-// Handle new house form submission
+// Start server const PORT = process.env.PORT || 3000; app.listen(PORT, () => { console.log(Server running on port ${PORT}); });
 
-app.post('/add', upload.single('image'), (req, res) => {
-  const { name, location, price, description, amenities, contact } = req.body;
-
-  const newHouse = {
-    id: Date.now().toString(),
-    name,
-    location,
-    price,
-    image: req.file.path, // Cloudinary URL
-    description,
-    amenities,
-    contact
-  };
-
-  houses.push(newHouse);
-  res.redirect('/');
-});
-
-// Detail page for a specific house
-app.get('/houses/:id', (req, res) => {
-  const house = houses.find(h => h.id === req.params.id);
-
-  if (!house) {
-    return res.status(404).send("House not found");
-  }
-
-  res.render('detail', { house });
-});
-
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
