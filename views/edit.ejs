@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit House</title>
+  <style>
+    body {
+      background-color: #0a0a14;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 25px;
+      background-color: #121221;
+      border-radius: 12px;
+    }
+
+    input, textarea {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      background-color: #1e90ff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    a {
+      color: #aaa;
+      text-decoration: none;
+      display: block;
+      margin-top: 15px;
+    }
+
+    a:hover {
+      color: #1e90ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Edit House</h2>
+    <form action="/edit/<%= house._id %>" method="POST">
+      <input type="text" name="name" placeholder="House Name" value="<%= house.name %>" required>
+      <input type="text" name="location" placeholder="Location" value="<%= house.location %>" required>
+      <input type="number" name="price" placeholder="Price" value="<%= house.price %>" required>
+      <textarea name="description" placeholder="Description" rows="4"><%= house.description %></textarea>
+      <input type="text" name="amenities" placeholder="Amenities (comma separated)" value="<%= house.amenities.join(', ') %>">
+      <input type="text" name="contact" placeholder="Contact Info" value="<%= house.contact %>">
+      <button type="submit">Update House</button>
+    </form>
+    <a href="/detail/<%= house._id %>">← Cancel</a>
+  </div>
+</body>
+</html>
