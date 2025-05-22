@@ -3,6 +3,58 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const express = require('express');
+const app = express();
+const mongoose = require('mongoose');
+const House = require('./models/House'); // Your Mongoose model
+const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
+
+// Delete Route
+app.post('/delete/:id', async (req, res) => {
+  try {
+    await House.findByIdAndDelete(req.params.id);
+    res.redirect('/');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error deleting house.');
+  }
+});
+
+// Edit Form Route
+app.get('/edit/:id', async (req, res) => {
+  try {
+    const house = await House.findById(req.params.id);
+    if (!house) return res.status(404).send('House not found');
+    res.render('edit', { house });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error loading edit form.');
+  }
+});
+
+// Update House Route
+app.post('/edit/:id', async (req, res) => {
+  try {
+    const updatedData = {
+      name: req.body.name,
+      location: req.body.location,
+      price: req.body.price,
+      description: req.body.description,
+      amenities: req.body.amenities.split(',').map(a => a.trim()),
+      contact: req.body.contact
+    };
+    await House.findByIdAndUpdate(req.params.id, updatedData);
+    res.redirect(`/detail/${req.params.id}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error updating house.');
+  }
+});
+
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
