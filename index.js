@@ -35,4 +35,3 @@ await House.findByIdAndUpdate(req.params.id, updatedData); res.redirect(/detail/
 // Delete house app.post('/delete/:id', async (req, res) => { await House.findByIdAndDelete(req.params.id); res.redirect('/'); });
 
 // Start server const PORT = process.env.PORT || 3000; app.listen(PORT, () => { console.log(Server running on port ${PORT}); });
-
