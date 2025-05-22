@@ -1,71 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title><%= house.name %> - House Details</title>
-  <link rel="stylesheet" href="/styles.css">
+  <title><%= house.name %> - Details</title>
   <style>
     body {
+      background-color: #0a0a14;
+      color: white;
       font-family: Arial, sans-serif;
-      background-color: #f7f9fc;
       margin: 0;
       padding: 0;
     }
 
     .container {
-      max-width: 800px;
+      max-width: 700px;
       margin: 40px auto;
-      background: white;
-      padding: 24px;
+      padding: 20px;
+      background-color: #121221;
       border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
     }
 
-    img {
+    .house-image {
       width: 100%;
-      border-radius: 10px;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 8px;
       margin-bottom: 20px;
     }
 
-    h2 {
+    .detail-title {
+      font-size: 28px;
       margin-bottom: 10px;
     }
 
-    p {
-      margin: 6px 0;
-      font-size: 16px;
+    .detail-info {
+      margin: 10px 0;
+      line-height: 1.6;
     }
 
     .label {
       font-weight: bold;
-      color: #333;
+      color: #aaa;
     }
 
-    a.back-link {
-      display: inline-block;
-      margin-top: 20px;
+    .back-link {
+      display: block;
+      margin-top: 30px;
+      color: #ddd;
+      text-align: center;
       text-decoration: none;
-      color: #007bff;
     }
 
-    a.back-link:hover {
-      text-decoration: underline;
+    .back-link:hover {
+      color: #1e90ff;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2><%= house.name %></h2>
+    <img src="<%= house.imageUrl %>" alt="House Image" class="house-image">
 
-    <img src="<%= house.image %>" alt="House image">
+    <div class="detail-title"><%= house.name %></div>
 
-    <p><span class="label">Location:</span> <%= house.location %></p>
-    <p><span class="label">Price:</span> <%= house.price %></p>
-    <p><span class="label">Description:</span> <%= house.description %></p>
-    <p><span class="label">Amenities:</span> <%= house.amenities %></p>
-    <p><span class="label">Contact:</span> <%= house.contact %></p>
+    <div class="detail-info"><span class="label">Location:</span> <%= house.location %></div>
+    <div class="detail-info"><span class="label">Price:</span> $<%= house.price %></div>
+    <div class="detail-info"><span class="label">Description:</span> <%= house.description %></div>
+    <div class="detail-info"><span class="label">Amenities:</span> <%= house.amenities.join(", ") %></div>
+    <div class="detail-info"><span class="label">Contact Info:</span> <%= house.contact %></div>
 
-    <a href="/" class="back-link">&larr; Back to Listings</a>
+    <a href="/" class="back-link">← Back to Listings</a>
   </div>
 </body>
 </html>
